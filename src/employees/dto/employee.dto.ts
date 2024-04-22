@@ -4,6 +4,8 @@ import {
   IsNotEmpty,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IPosition } from 'src/positions/interfaces';
+import { Employee } from '../entities/employee.entity';
 
 export class EmployeeDto implements Readonly<EmployeeDto> {
   @ApiProperty()
@@ -16,10 +18,10 @@ export class EmployeeDto implements Readonly<EmployeeDto> {
   name: string;
 
   @ApiProperty()
-  position: number;
+  position: IPosition;
 
   @ApiProperty()
-  parent: number;
+  parent: Employee;
 
   @ApiProperty()
   isActive: boolean;

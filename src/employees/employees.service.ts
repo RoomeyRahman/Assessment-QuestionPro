@@ -1,12 +1,38 @@
-import { Injectable } from '@nestjs/common';
-import { CreateEmployeeDto } from './dto/create-employee.dto';
-import { UpdateEmployeeDto } from './dto/update-employee.dto';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CreateEmployeeDto, EmployeeDto } from './dto';
+import { Employee } from './entities/employee.entity';
+import { IEmployee } from './interfaces';
 
 @Injectable()
 export class EmployeesService {
-  create(createEmployeeDto: CreateEmployeeDto) {
-    return 'This action adds a new employee';
+  /**
+   * Constructor
+   * @param {Repository<Position>} repository
+   */
+  constructor(
+    @InjectRepository(Employee)
+    private readonly repository: Repository<Employee>,
+  ) { }
+
+  /**
+   * Create an employee
+   * @param {CreateEmployeeDto} data
+   * @returns {Promise<IEmployee>}
+   */
+  public async create(data: CreateEmployeeDto): Promise<IEmployee> {
+    try {
+      return await this.repository.save(data);
+    } catch (err) {
+      throw new HttpException(err, err.status || HttpStatus.BAD_REQUEST);
+    }
   }
+
 
   findAll() {
     return `This action returns all employees`;
@@ -14,13 +40,5 @@ export class EmployeesService {
 
   findOne(id: number) {
     return `This action returns a #${id} employee`;
-  }
-
-  update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
-    return `This action updates a #${id} employee`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} employee`;
   }
 }
