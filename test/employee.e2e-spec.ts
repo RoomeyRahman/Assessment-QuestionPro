@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
-import { EmployeesModule } from '../src/employees/employees.module';
 import { EmployeesService } from '../src/employees/employees.service';
 import { mockResponseEmployees } from '../src/common/constant';
 

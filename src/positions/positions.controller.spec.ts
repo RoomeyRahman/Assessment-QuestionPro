@@ -4,11 +4,20 @@ import { PositionsService } from './positions.service';
 
 describe('PositionsController', () => {
   let controller: PositionsController;
+  let service: PositionsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [PositionsController],
-      providers: [PositionsService],
+      providers: [
+        {
+          provide: PositionsService,
+          useValue: {
+            create: jest.fn(),
+            findAll: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
     controller = module.get<PositionsController>(PositionsController);
