@@ -58,15 +58,154 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
+## API Documentation
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+This API documentation outlines the endpoints and functionalities of this application.
+
+### Authentication
+
+Authentication is required for certain endpoints. The API uses JWT (JSON Web Tokens) for authentication. Users need to register and login to obtain an access token.
+
+### Register User [/users] (POST)
+
+Register a new user with email and password.
+
++ Request (application/json)
+    + Body
+
+            {
+                "email": "user@example.com",
+                "password": "password123"
+            }
+
++ Response 201 (application/json)
+    + Body
+
+            {
+                "message": "User registered successfully"
+            }
+
+### Login [/login] (POST)
+
+Authenticate a user with email and password. Returns an access token in the response header.
+
++ Request (application/json)
+    + Body
+
+            {
+                "email": "user@example.com",
+                "password": "password123"
+            }
+
++ Response 200 (application/json)
+    + Headers
+
+            X-API-KEY: <access_token>
+
+    + Body
+
+            {
+                "message": "Login successful"
+            }
+
+## Position Endpoints
+
+### Create Position [/positions] (POST)
+
+Create a new position with a specified name.
+
++ Request (application/json)
+    + Body
+
+            {
+                "name": "CTO"
+            }
+
++ Response 201 (application/json)
+    + Body
+
+            {
+                "message": "Position created successfully"
+            }
+
+## Employee Endpoints
+
+### Create Employee [/employees] (POST)
+
+Create a new employee with a specified name, position, and parent (manager).
+
++ Request (application/json)
+    + Body
+
+            {
+                "name": "John Doe",
+                "position": 1,
+                "parent": 2
+            }
+
+    + Description
+        - `position`: ID of the position (foreign key from Position table)
+        - `parent`: ID of the parent employee (self-referencing)
+
++ Response 201 (application/json)
+    + Body
+
+            {
+                "message": "Employee created successfully"
+            }
+
+### Get All Employees [/employees] (GET)
+
+Retrieve all employees from the database.
+
++ Response 200 (application/json)
+    + Body
+
+            [
+                {
+                    "id": 1,
+                    "name": "John Doe",
+                    "position": "CTO",
+                    "parent": null
+                },
+                {
+                    "id": 2,
+                    "name": "Jane Smith",
+                    "position": "Senior software eng",
+                    "parent": 1
+                }
+            ]
+
+### Get All Authorized Employees [/employees/authorised] (GET)
+
+Retrieve all employees from the database. Requires a valid JWT token in the `Authorization` header.
+
++ Headers
+
+    Authorization: Bearer <access_token>
+
++ Response 200 (application/json)
+    + Body
+
+            [
+                {
+                    "id": 1,
+                    "name": "John Doe",
+                    "position": "CTO",
+                    "parent": null
+                },
+                {
+                    "id": 2,
+                    "name": "Jane Smith",
+                    "position": "Senior software eng",
+                    "parent": 1
+                }
+            ]
+
 
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Author - [Md Ataur Rahman](mailto: roomeyrahman@gmail.com)
 
 ## License
 
