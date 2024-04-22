@@ -8,12 +8,14 @@ import { AppService } from './app.service';
 import { configService } from './common/dbconfig/config.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { EmployeesModule } from './employees/employees.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
     UsersModule,
     AuthModule,
+    EmployeesModule,
   ],
   controllers: [AppController],
   providers: [
