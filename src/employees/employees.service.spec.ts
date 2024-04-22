@@ -1,12 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken, getDataSourceToken } from '@nestjs/typeorm';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { EmployeesService } from './employees.service';
 import { Employee } from './entities/employee.entity';
 import { Position } from '../positions/entities/position.entity';
 
 describe('EmployeesService', () => {
   let repository: Record<string, jest.Mock>;
-  let connection: Record<string, jest.Mock>;
   let positionRepositoryMock: Record<string, jest.Mock>;
   let service: EmployeesService;
 
@@ -14,10 +13,6 @@ describe('EmployeesService', () => {
     repository = {
       save: jest.fn(),
       findOne: jest.fn(),
-    };
-    connection = {
-      getTreeRepository: jest.fn(),
-      findTrees: jest.fn(),   
     };
     positionRepositoryMock = {
       findOne: jest.fn(),
@@ -29,10 +24,6 @@ describe('EmployeesService', () => {
         {
           provide: getRepositoryToken(Employee),
           useValue: repository
-        },
-        {
-          provide: getDataSourceToken(), 
-          useValue: connection, 
         },
         {
           provide: getRepositoryToken(Position),
@@ -89,7 +80,7 @@ describe('EmployeesService', () => {
 
       repository.save.mockResolvedValue(createdEmployee);
       const result = await service.create(createEmployeeDto); 
-      
+
       expect(result).toEqual(createdEmployee);
       expect(repository.save).toHaveBeenCalledWith(createEmployeeDto);
     });

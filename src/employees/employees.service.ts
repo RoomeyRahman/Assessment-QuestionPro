@@ -4,8 +4,7 @@ import {
   HttpStatus,
   BadRequestException,
 } from '@nestjs/common';
-import { Repository, Connection } from 'typeorm';
-import { InjectRepository, InjectConnection } from '@nestjs/typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreateEmployeeDto, EmployeeDto } from './dto';
 import { Employee } from './entities/employee.entity';
 import { IEmployee } from './interfaces';
@@ -22,7 +21,6 @@ export class EmployeesService {
     private readonly repository,
     @InjectRepository(Position)
     private readonly positionRepo,
-    @InjectConnection() private connection: Connection,
   ) { }
 
   /**
@@ -62,27 +60,36 @@ export class EmployeesService {
     }
   }
 
-  private serializeEmployees(employees: Employee[]): any[] {
-    return employees.map(employee => ({
+  private serializeEmployee(employee: Employee) {
+    return {
       id: employee.id,
       name: employee.name,
       positionId: employee.position?.id,
       positionName: employee.position?.name,
-      child: employee.child && this.serializeEmployees(employee.child),
-    }));
+      child: employee.child ? employee.child.map(child => this.serializeEmployee(child)).flat() : [], 
+    };
   }
 
   /**
    * fetch record
    * @returns record[]
    */
-  async findAll() {
+  async findAll(): Promise<any[]> {
     try {
-      const employeeTreeRepository = this.connection.getTreeRepository(Employee);
-      const employees = await employeeTreeRepository.findTrees({
-        relations: ['position'],
+      // Fetch all employees
+      const employees = await this.repository.find({
+        relations: [
+          'position', 
+          'child', 
+          'child.position', 
+          'child.child', 
+          'child.child.position'
+        ],
       });
-      return this.serializeEmployees(employees);
+      // Serialize employees recursively
+      const serializedEmployees = employees.map(employee => this.serializeEmployee(employee));
+
+      return serializedEmployees; 
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
