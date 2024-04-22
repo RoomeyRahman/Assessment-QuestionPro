@@ -42,11 +42,11 @@ export class EmployeeDto implements Readonly<EmployeeDto> {
   updatedBy: number;
 
   public static from(dto: Partial<EmployeeDto>) {
-      const it = new EmployeeDto();
-      it.id = dto.id;
-      it.name = dto.name;
-      it.position = dto.position;
-      it.parent = dto.parent;
-      return it;
+    const it = new EmployeeDto();
+    it.id = dto.id;
+    it.name = dto.name;
+    it.position = dto.position;
+    it.parent = dto.parent;
+    return it;
   }
 }

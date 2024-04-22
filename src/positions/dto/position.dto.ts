@@ -35,16 +35,16 @@ export class PositionDto implements Readonly<PositionDto> {
   updatedBy: number;
 
   public static from(dto: Partial<PositionDto>) {
-      const it = new PositionDto();
-      it.id = dto.id;
-      it.name = dto.name;
-      return it;
+    const it = new PositionDto();
+    it.id = dto.id;
+    it.name = dto.name;
+    return it;
   }
 
   public static fromEntity(entity: Position) {
-      return this.from({
-          id: entity.id,
-          name: entity.name,
-      });
+    return this.from({
+        id: entity.id,
+        name: entity.name,
+    });
   }
 }

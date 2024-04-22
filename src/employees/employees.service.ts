@@ -3,8 +3,8 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, Connection } from 'typeorm';
+import { InjectRepository, InjectConnection } from '@nestjs/typeorm';
 import { CreateEmployeeDto, EmployeeDto } from './dto';
 import { Employee } from './entities/employee.entity';
 import { IEmployee } from './interfaces';
@@ -17,7 +17,8 @@ export class EmployeesService {
    */
   constructor(
     @InjectRepository(Employee)
-    private readonly repository: Repository<Employee>,
+    private readonly repository,
+    @InjectConnection() private connection: Connection,
   ) { }
 
   /**
@@ -27,15 +28,50 @@ export class EmployeesService {
    */
   public async create(data: CreateEmployeeDto): Promise<IEmployee> {
     try {
-      return await this.repository.save(data);
+      const dto = new EmployeeDto();
+      if (data?.parent) {
+          const parent = await this.repository.findOne({
+            where: {
+              id: data.parent,
+            },
+          });
+          dto.parent = parent;
+          delete data.parent;
+      }
+
+      return await this.repository.save({
+        ...dto,
+        ...data
+      });
     } catch (err) {
       throw new HttpException(err, err.status || HttpStatus.BAD_REQUEST);
     }
   }
 
+  private serializeEmployees(employees: Employee[]): any[] {
+    return employees.map(employee => ({
+      id: employee.id,
+      name: employee.name,
+      positionId: employee.position.id,
+      positionName: employee.position.name,
+      child: this.serializeEmployees(employee.child),
+    }));
+  }
 
-  findAll() {
-    return `This action returns all employees`;
+  /**
+   * fetch record
+   * @returns record[]
+   */
+  async findAll() {
+    try {
+      const employeeTreeRepository = this.connection.getTreeRepository(Employee);
+      const employees = await employeeTreeRepository.findTrees({
+        relations: ['position'],
+      });
+      return this.serializeEmployees(employees);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
   }
 
   findOne(id: number) {
