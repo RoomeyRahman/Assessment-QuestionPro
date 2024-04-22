@@ -4,7 +4,7 @@ import {
   IsNotEmpty,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { IPosition } from 'src/positions/interfaces';
+import { IPosition } from '../../positions/interfaces';
 import { Employee } from '../entities/employee.entity';
 
 export class EmployeeDto implements Readonly<EmployeeDto> {

@@ -1,6 +1,6 @@
 import { Entity, Column, ManyToOne, Tree, TreeChildren, TreeParent } from 'typeorm';
 import { BaseEntity } from '../../common/entities';
-import { Position } from 'src/positions/entities/position.entity';
+import { Position } from '../../positions/entities/position.entity';
 
 @Entity({ name: 'employees' })
 @Tree('closure-table', {

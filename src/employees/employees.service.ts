@@ -2,22 +2,26 @@ import {
   Injectable,
   HttpException,
   HttpStatus,
+  BadRequestException,
 } from '@nestjs/common';
 import { Repository, Connection } from 'typeorm';
 import { InjectRepository, InjectConnection } from '@nestjs/typeorm';
 import { CreateEmployeeDto, EmployeeDto } from './dto';
 import { Employee } from './entities/employee.entity';
 import { IEmployee } from './interfaces';
+import { Position } from '../positions/entities/position.entity';
 
 @Injectable()
 export class EmployeesService {
   /**
    * Constructor
-   * @param {Repository<Position>} repository
+   * @param {Repository<Employee>} repository
    */
   constructor(
     @InjectRepository(Employee)
     private readonly repository,
+    @InjectRepository(Position)
+    private readonly positionRepo,
     @InjectConnection() private connection: Connection,
   ) { }
 
@@ -26,17 +30,27 @@ export class EmployeesService {
    * @param {CreateEmployeeDto} data
    * @returns {Promise<IEmployee>}
    */
-  public async create(data: CreateEmployeeDto): Promise<IEmployee> {
+  public async create(data): Promise<IEmployee> {
     try {
       const dto = new EmployeeDto();
+
+      const position = await this.positionRepo.findOne({
+        where: {
+          id: data.position
+        }
+      });
+      if (!position) {
+        throw new BadRequestException("Invalid position");
+      }
+
       if (data?.parent) {
-          const parent = await this.repository.findOne({
-            where: {
-              id: data.parent,
-            },
-          });
-          dto.parent = parent;
-          delete data.parent;
+        const parent = await this.repository.findOne({
+          where: {
+            id: data.parent,
+          },
+        });
+        dto.parent = parent;
+        delete data.parent;
       }
 
       return await this.repository.save({
@@ -52,9 +66,9 @@ export class EmployeesService {
     return employees.map(employee => ({
       id: employee.id,
       name: employee.name,
-      positionId: employee.position.id,
-      positionName: employee.position.name,
-      child: this.serializeEmployees(employee.child),
+      positionId: employee.position?.id,
+      positionName: employee.position?.name,
+      child: employee.child && this.serializeEmployees(employee.child),
     }));
   }
 

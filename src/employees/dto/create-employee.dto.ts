@@ -2,7 +2,7 @@ import { IsString, MaxLength, IsNotEmpty, IsEnum } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Employee } from '../entities/employee.entity';
 import { Position } from 'aws-sdk/clients/codecommit';
-import { IPosition } from 'src/positions/interfaces';
+import { IPosition } from '../../positions/interfaces';
 
 export class CreateEmployeeDto implements Readonly<CreateEmployeeDto> {
   @ApiProperty()
@@ -15,5 +15,5 @@ export class CreateEmployeeDto implements Readonly<CreateEmployeeDto> {
   position: IPosition;
 
   @ApiProperty()
-  parent: Employee;
+  parent?: Employee;
 }
