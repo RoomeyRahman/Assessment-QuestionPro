@@ -21,7 +21,7 @@ export class EmployeesService {
     private readonly repository,
     @InjectRepository(Position)
     private readonly positionRepo,
-  ) { }
+  ) {}
 
   /**
    * Create an employee
@@ -34,11 +34,11 @@ export class EmployeesService {
 
       const position = await this.positionRepo.findOne({
         where: {
-          id: data.position
-        }
+          id: data.position,
+        },
       });
       if (!position) {
-        throw new BadRequestException("Invalid position");
+        throw new BadRequestException('Invalid position');
       }
 
       if (data?.parent) {
@@ -53,7 +53,7 @@ export class EmployeesService {
 
       return await this.repository.save({
         ...dto,
-        ...data
+        ...data,
       });
     } catch (err) {
       throw new HttpException(err, err.status || HttpStatus.BAD_REQUEST);
@@ -66,7 +66,9 @@ export class EmployeesService {
       name: employee.name,
       positionId: employee.position?.id,
       positionName: employee.position?.name,
-      child: employee.child ? employee.child.map(child => this.serializeEmployee(child)).flat() : [], 
+      child: employee.child
+        ? employee.child.map((child) => this.serializeEmployee(child)).flat()
+        : [],
     };
   }
 
@@ -79,17 +81,19 @@ export class EmployeesService {
       // Fetch all employees
       const employees = await this.repository.find({
         relations: [
-          'position', 
-          'child', 
-          'child.position', 
-          'child.child', 
-          'child.child.position'
+          'position',
+          'child',
+          'child.position',
+          'child.child',
+          'child.child.position',
         ],
       });
       // Serialize employees recursively
-      const serializedEmployees = employees.map(employee => this.serializeEmployee(employee));
+      const serializedEmployees = employees.map((employee) =>
+        this.serializeEmployee(employee),
+      );
 
-      return serializedEmployees; 
+      return serializedEmployees;
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
