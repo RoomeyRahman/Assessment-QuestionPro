@@ -3,7 +3,6 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { EmployeesService } from './employees.service';
 import { Employee } from './entities/employee.entity';
 import { Position } from '../positions/entities/position.entity';
-import { HttpException, HttpStatus } from '@nestjs/common';
 
 describe('EmployeesService', () => {
   let repository: Record<string, jest.Mock>;

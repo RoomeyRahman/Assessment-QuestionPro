@@ -88,7 +88,6 @@ export class EmployeesService {
           'child.child.position',
         ],
       });
-      // Serialize employees recursively
       const serializedEmployees = employees.map((employee) =>
         this.serializeEmployee(employee),
       );
@@ -97,9 +96,5 @@ export class EmployeesService {
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} employee`;
   }
 }
