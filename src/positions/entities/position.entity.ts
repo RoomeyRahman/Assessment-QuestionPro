@@ -7,6 +7,7 @@ export class Position extends BaseEntity {
   @Column({
     type: 'enum',
     enum: Designation,
+    unique: true
   })
   name: string;
 }

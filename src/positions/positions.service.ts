@@ -1,11 +1,39 @@
-import { Injectable } from '@nestjs/common';
-import { CreatePositionDto } from './dto/create-position.dto';
-import { UpdatePositionDto } from './dto/update-position.dto';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CreatePositionDto, PositionDto } from './dto';
+import { Position } from './entities/position.entity';
+import { IPosition } from './interfaces';
 
 @Injectable()
 export class PositionsService {
-  create(createPositionDto: CreatePositionDto) {
-    return 'This action adds a new position';
+  /**
+   * Constructor
+   * @param {Repository<Position>} repository
+   */
+  constructor(
+    @InjectRepository(Position)
+    private readonly repository: Repository<Position>,
+  ) { }
+
+
+  /**
+   * Create a position
+   * @param {CreatePositionDto} data
+   * @returns {Promise<IPosition>}
+   */
+  public async create(data: CreatePositionDto): Promise<IPosition> {
+    try {
+      const record = await this.repository.save(data);
+
+      return PositionDto.fromEntity(record);
+    } catch (err) {
+      throw new HttpException(err, err.status || HttpStatus.BAD_REQUEST);
+    }
   }
 
   findAll() {
@@ -14,13 +42,5 @@ export class PositionsService {
 
   findOne(id: number) {
     return `This action returns a #${id} position`;
-  }
-
-  update(id: number, updatePositionDto: UpdatePositionDto) {
-    return `This action updates a #${id} position`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} position`;
   }
 }

@@ -6,7 +6,7 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { Position } from '../entities/position.entity';
 
-export class ProjectDTO implements Readonly<ProjectDTO> {
+export class PositionDto implements Readonly<PositionDto> {
   @ApiProperty()
   id: number;
 
@@ -34,8 +34,8 @@ export class ProjectDTO implements Readonly<ProjectDTO> {
   @ApiProperty()
   updatedBy: number;
 
-  public static from(dto: Partial<ProjectDTO>) {
-      const it = new ProjectDTO();
+  public static from(dto: Partial<PositionDto>) {
+      const it = new PositionDto();
       it.id = dto.id;
       it.name = dto.name;
       return it;
