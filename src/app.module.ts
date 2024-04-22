@@ -9,6 +9,7 @@ import { configService } from './common/dbconfig/config.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { EmployeesModule } from './employees/employees.module';
+import { PositionsModule } from './positions/positions.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { EmployeesModule } from './employees/employees.module';
     UsersModule,
     AuthModule,
     EmployeesModule,
+    PositionsModule,
   ],
   controllers: [AppController],
   providers: [
