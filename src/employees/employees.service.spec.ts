@@ -3,6 +3,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { EmployeesService } from './employees.service';
 import { Employee } from './entities/employee.entity';
 import { Position } from '../positions/entities/position.entity';
+import { mockEmployees, mockResponseEmployees } from '../common/constant';
 
 describe('EmployeesService', () => {
   let repository: Record<string, jest.Mock>;
@@ -91,138 +92,6 @@ describe('EmployeesService', () => {
 
   describe('findAll', () => {
     it('should return all employees with correct serialization', async () => {
-      // Mock data for testing
-      const mockEmployees = [
-        {
-          id: 19,
-          isActive: true,
-          isDeleted: false,
-          createAt: '1713785369567',
-          createdBy: null,
-          updatedAt: '1713785369567',
-          updatedBy: null,
-          name: 'Md Ataur Rahman',
-          position: {
-            id: 1,
-            isActive: true,
-            isDeleted: false,
-            createAt: '1713780791231',
-            createdBy: null,
-            updatedAt: '1713780791231',
-            updatedBy: null,
-            name: 'CTO',
-          },
-          child: [
-            {
-              id: 21,
-              isActive: true,
-              isDeleted: false,
-              createAt: '1713785792007',
-              createdBy: null,
-              updatedAt: '1713785792007',
-              updatedBy: null,
-              name: 'Md Sakib',
-              position: {
-                id: 2,
-                isActive: true,
-                isDeleted: false,
-                createAt: '1713780791231',
-                createdBy: null,
-                updatedAt: '1713780791231',
-                updatedBy: null,
-                name: 'Senior software eng',
-              },
-              child: [
-                {
-                  id: 22,
-                  isActive: true,
-                  isDeleted: false,
-                  createAt: '1713785792007',
-                  createdBy: null,
-                  updatedAt: '1713785792007',
-                  updatedBy: null,
-                  name: 'Md rocky',
-                  position: {
-                    id: 3,
-                    isActive: true,
-                    isDeleted: false,
-                    createAt: '1713780791231',
-                    createdBy: null,
-                    updatedAt: '1713780791231',
-                    updatedBy: null,
-                    name: 'Software eng',
-                  },
-                },
-              ],
-            },
-          ],
-        },
-        {
-          id: 21,
-          isActive: true,
-          isDeleted: false,
-          createAt: '1713785792007',
-          createdBy: null,
-          updatedAt: '1713785792007',
-          updatedBy: null,
-          name: 'Md Sakib',
-          position: {
-            id: 2,
-            isActive: true,
-            isDeleted: false,
-            createAt: '1713780791231',
-            createdBy: null,
-            updatedAt: '1713780791231',
-            updatedBy: null,
-            name: 'Senior software eng',
-          },
-          child: [
-            {
-              id: 22,
-              isActive: true,
-              isDeleted: false,
-              createAt: '1713785792007',
-              createdBy: null,
-              updatedAt: '1713785792007',
-              updatedBy: null,
-              name: 'Md rocky',
-              position: {
-                id: 3,
-                isActive: true,
-                isDeleted: false,
-                createAt: '1713780791231',
-                createdBy: null,
-                updatedAt: '1713780791231',
-                updatedBy: null,
-                name: 'Software eng',
-              },
-              child: [],
-            },
-          ],
-        },
-        {
-          id: 22,
-          isActive: true,
-          isDeleted: false,
-          createAt: '1713785792007',
-          createdBy: null,
-          updatedAt: '1713785792007',
-          updatedBy: null,
-          name: 'Md rocky',
-          position: {
-            id: 3,
-            isActive: true,
-            isDeleted: false,
-            createAt: '1713780791231',
-            createdBy: null,
-            updatedAt: '1713780791231',
-            updatedBy: null,
-            name: 'Software eng',
-          },
-          child: [],
-        },
-      ];
-
       // Mock the behavior of the repository's find method
       repository.find.mockResolvedValue(mockEmployees);
 
@@ -241,53 +110,7 @@ describe('EmployeesService', () => {
       });
 
       // Verify the result
-      expect(result).toEqual([
-        {
-          id: 19,
-          name: 'Md Ataur Rahman',
-          positionId: 1,
-          positionName: 'CTO',
-          child: [
-            {
-              id: 21,
-              name: 'Md Sakib',
-              positionId: 2,
-              positionName: 'Senior software eng',
-              child: [
-                {
-                  id: 22,
-                  name: 'Md rocky',
-                  positionId: 3,
-                  positionName: 'Software eng',
-                  child: [],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          id: 21,
-          name: 'Md Sakib',
-          positionId: 2,
-          positionName: 'Senior software eng',
-          child: [
-            {
-              id: 22,
-              name: 'Md rocky',
-              positionId: 3,
-              positionName: 'Software eng',
-              child: [],
-            },
-          ],
-        },
-        {
-          id: 22,
-          name: 'Md rocky',
-          positionId: 3,
-          positionName: 'Software eng',
-          child: [],
-        },
-      ]);
+      expect(result).toEqual(mockResponseEmployees);
       expect(serializeEmployeeSpy).toHaveBeenCalled();
     });
   });
