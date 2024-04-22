@@ -1,26 +1,42 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
+import { IUser } from './interfaces/user.interface';
+import * as bcrypt from 'bcrypt';
+import { CreateUserDto, UserDto } from './dto';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
+  /**
+   * Constructor
+   * @param {Repository<User>} repository
+   */
+  constructor(
+    @InjectRepository(User)
+    private readonly repository: Repository<User>,
+  ) { }
 
-  findAll() {
-    return `This action returns all users`;
-  }
+  /**
+   * Create a profile with RegisterPayload fields
+   * @param {CreateUserDto} data user payload
+   * @returns {Promise<IUser>} created user data
+   */
+  public async create(data: CreateUserDto): Promise<IUser> {
+    try {
+      const userDto = new UserDto();
+      userDto.email = data.email.toLowerCase();
+      userDto.password = bcrypt.hashSync(data.password, 8);
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
+      const user = await this.repository.save(userDto);
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+      return UserDto.fromEntity(user);
+    } catch (err) {
+      throw new HttpException(err, err.status || HttpStatus.BAD_REQUEST);
+    }
   }
 }

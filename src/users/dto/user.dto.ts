@@ -10,7 +10,7 @@ import {
 import { User } from '../entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UserDTO implements Readonly<UserDTO> {
+export class UserDto implements Readonly<UserDto> {
 	@ApiProperty()
 	@IsNumber()
 	id: number;
@@ -49,8 +49,8 @@ export class UserDTO implements Readonly<UserDTO> {
 	@ApiProperty()
 	updatedBy: string;
 
-	public static from(dto: Partial<UserDTO>) {
-		const it = new UserDTO();
+	public static from(dto: Partial<UserDto>) {
+		const it = new UserDto();
 		it.id = dto.id;
 		it.email = dto.email;
 		it.password = dto.password;
