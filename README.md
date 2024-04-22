@@ -202,6 +202,11 @@ Retrieve all employees from the database. Requires a valid JWT token in the `Aut
                 }
             ]
 
+## More inside of logging and monitoring
+
+Question: How you'd approach logging & monitoring at scale so that you can actually debug the system as it increases in complexity.
+
+Answer: To handle logging and monitoring at scale, I would implement structured logging with a centralized logging system like ELK stack or Splunk. Additionally, I'd integrate custom metrics, error tracking, and proactive alerting mechanisms. Continuous refinement of logging configurations and monitoring dashboards ensures effective debugging and troubleshooting as the system complexity grows.
 
 ## Stay in touch
 
