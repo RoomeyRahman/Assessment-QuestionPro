@@ -178,7 +178,8 @@ Retrieve all employees from the database.
 
   - Body
 
-              {
+```
+    {
         "status": "SUCCESS",
         "data": [
             {
@@ -229,8 +230,8 @@ Retrieve all employees from the database.
         ],
         "message": "",
         "pagination": null
-
     }
+```
 
 ### Get All Authorized Employees [/employees/authorised] (GET)
 
@@ -244,7 +245,8 @@ Retrieve all employees from the database. Requires a valid JWT token in the `Aut
 
   - Body
 
-              {
+```
+    {
         "status": "SUCCESS",
         "data": [
             {
@@ -295,8 +297,8 @@ Retrieve all employees from the database. Requires a valid JWT token in the `Aut
         ],
         "message": "",
         "pagination": null
-
     }
+```
 
 ## More inside of logging and monitoring
 
