@@ -32,6 +32,12 @@
 - **PostgreSQL**
 - **TypeORM**
 
+## env setup
+
+- Create a `.env` file in the root directory.
+- Copy everything from `.env.sample` and paste it in the `.env` file.
+- Update the environment variable according to the local machine setup.
+
 ## Installation
 
 ```bash
