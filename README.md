@@ -89,9 +89,19 @@ Register a new user with email and password.
 
   - Body
 
-          {
-              "message": "User registered successfully"
-          }
+          ```
+            {
+                "status": "SUCCESS",
+                "data": {
+                    "id": 3,
+                    "email": "user@example.com",
+                    "isActive": true,
+                    "isDeleted": false
+                },
+                "message": "",
+                "pagination": null
+            }
+          ```
 
 ### Login [/login] (POST)
 
@@ -138,9 +148,23 @@ Create a new position with a specified name.
 
   - Body
 
+          ```
           {
-              "message": "Position created successfully"
-          }
+                "status": "SUCCESS",
+                "data": {
+                    "id": 1,
+                    "name": "CTO",
+                    "isActive": true,
+                    "isDeleted": false,
+                    "createAt": "1713785792007",
+                    "createdBy": null,
+                    "updatedAt": "1713785792007",
+                    "updatedBy": null,
+                },
+                "message": "",
+                "pagination": null
+            }
+          ```
 
 ## Employee Endpoints
 
@@ -152,11 +176,13 @@ Create a new employee with a specified name, position, and parent (manager).
 
   - Body
 
-          {
-              "name": "John Doe",
-              "position": 1,
-              "parent": 2
-          }
+          ```
+            {
+                "name": "Sakhawat Rudro",
+                "position": 4,
+                "parent": 21
+            }
+          ```
 
   - Description
     - `position`: ID of the position (foreign key from Position table)
@@ -166,9 +192,34 @@ Create a new employee with a specified name, position, and parent (manager).
 
   - Body
 
-          {
-              "message": "Employee created successfully"
-          }
+```
+    {
+        "status": "SUCCESS",
+        "data": {
+            "parent": {
+                "id": 21,
+                "isActive": true,
+                "isDeleted": false,
+                "createAt": "1713785792007",
+                "createdBy": null,
+                "updatedAt": "1713785792007",
+                "updatedBy": null,
+                "name": "Md Sakib"
+            },
+            "name": "Sakhawat Rudro",
+            "position": 4,
+            "createdBy": null,
+            "updatedBy": null,
+            "id": 24,
+            "isActive": true,
+            "isDeleted": false,
+            "createAt": "1713839594603",
+            "updatedAt": "1713839594604"
+        },
+        "message": "",
+        "pagination": null
+    }
+```
 
 ### Get All Employees [/employees] (GET)
 
