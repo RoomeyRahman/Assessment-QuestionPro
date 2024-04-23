@@ -76,43 +76,49 @@ Authentication is required for certain endpoints. The API uses JWT (JSON Web Tok
 
 Register a new user with email and password.
 
-+ Request (application/json)
-    + Body
+- Request (application/json)
 
-            {
-                "email": "user@example.com",
-                "password": "password123"
-            }
+  - Body
 
-+ Response 201 (application/json)
-    + Body
+          {
+              "email": "user@example.com",
+              "password": "password123"
+          }
 
-            {
-                "message": "User registered successfully"
-            }
+- Response 201 (application/json)
+
+  - Body
+
+          {
+              "message": "User registered successfully"
+          }
 
 ### Login [/login] (POST)
 
 Authenticate a user with email and password. Returns an access token in the response header.
 
-+ Request (application/json)
-    + Body
+- Request (application/json)
 
-            {
-                "email": "user@example.com",
-                "password": "password123"
-            }
+  - Body
 
-+ Response 200 (application/json)
-    + Headers
+          {
+              "email": "user@example.com",
+              "password": "password123"
+          }
 
-            X-API-KEY: <access_token>
+- Response 200 (application/json)
 
-    + Body
+  - Headers
 
-            {
-                "message": "Login successful"
-            }
+          X-API-KEY: <access_token>
+          X-API-KEY-EXPIRES: <time in ms>
+
+  - Body
+
+          {
+              "id": 1,
+              "email": "user@example.com"
+          }
 
 ## Position Endpoints
 
@@ -120,19 +126,21 @@ Authenticate a user with email and password. Returns an access token in the resp
 
 Create a new position with a specified name.
 
-+ Request (application/json)
-    + Body
+- Request (application/json)
 
-            {
-                "name": "CTO"
-            }
+  - Body
 
-+ Response 201 (application/json)
-    + Body
+          {
+              "name": "CTO"
+          }
 
-            {
-                "message": "Position created successfully"
-            }
+- Response 201 (application/json)
+
+  - Body
+
+          {
+              "message": "Position created successfully"
+          }
 
 ## Employee Endpoints
 
@@ -140,73 +148,155 @@ Create a new position with a specified name.
 
 Create a new employee with a specified name, position, and parent (manager).
 
-+ Request (application/json)
-    + Body
+- Request (application/json)
 
-            {
-                "name": "John Doe",
-                "position": 1,
-                "parent": 2
-            }
+  - Body
 
-    + Description
-        - `position`: ID of the position (foreign key from Position table)
-        - `parent`: ID of the parent employee (self-referencing)
+          {
+              "name": "John Doe",
+              "position": 1,
+              "parent": 2
+          }
 
-+ Response 201 (application/json)
-    + Body
+  - Description
+    - `position`: ID of the position (foreign key from Position table)
+    - `parent`: ID of the parent employee (self-referencing)
 
-            {
-                "message": "Employee created successfully"
-            }
+- Response 201 (application/json)
+
+  - Body
+
+          {
+              "message": "Employee created successfully"
+          }
 
 ### Get All Employees [/employees] (GET)
 
 Retrieve all employees from the database.
 
-+ Response 200 (application/json)
-    + Body
+- Response 200 (application/json)
 
-            [
-                {
-                    "id": 1,
-                    "name": "John Doe",
-                    "position": "CTO",
-                    "parent": null
-                },
-                {
-                    "id": 2,
-                    "name": "Jane Smith",
-                    "position": "Senior software eng",
-                    "parent": 1
-                }
-            ]
+  - Body
+
+              {
+        "status": "SUCCESS",
+        "data": [
+            {
+                "id": 19,
+                "name": "Md Ataur Rahman",
+                "positionId": 1,
+                "positionName": "CTO",
+                "child": [
+                    {
+                        "id": 21,
+                        "name": "Md Sakib",
+                        "positionId": 2,
+                        "positionName": "Senior software eng",
+                        "child": [
+                            {
+                                "id": 22,
+                                "name": "Md rocky",
+                                "positionId": 3,
+                                "positionName": "Software eng",
+                                "child": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": 21,
+                "name": "Md Sakib",
+                "positionId": 2,
+                "positionName": "Senior software eng",
+                "child": [
+                    {
+                        "id": 22,
+                        "name": "Md rocky",
+                        "positionId": 3,
+                        "positionName": "Software eng",
+                        "child": []
+                    }
+                ]
+            },
+            {
+                "id": 22,
+                "name": "Md rocky",
+                "positionId": 3,
+                "positionName": "Software eng",
+                "child": []
+            }
+        ],
+        "message": "",
+        "pagination": null
+
+    }
 
 ### Get All Authorized Employees [/employees/authorised] (GET)
 
 Retrieve all employees from the database. Requires a valid JWT token in the `Authorization` header.
 
-+ Headers
+- Headers
 
-    Authorization: Bearer <access_token>
+  Authorization: Bearer <access_token>
 
-+ Response 200 (application/json)
-    + Body
+- Response 200 (application/json)
 
-            [
-                {
-                    "id": 1,
-                    "name": "John Doe",
-                    "position": "CTO",
-                    "parent": null
-                },
-                {
-                    "id": 2,
-                    "name": "Jane Smith",
-                    "position": "Senior software eng",
-                    "parent": 1
-                }
-            ]
+  - Body
+
+              {
+        "status": "SUCCESS",
+        "data": [
+            {
+                "id": 19,
+                "name": "Md Ataur Rahman",
+                "positionId": 1,
+                "positionName": "CTO",
+                "child": [
+                    {
+                        "id": 21,
+                        "name": "Md Sakib",
+                        "positionId": 2,
+                        "positionName": "Senior software eng",
+                        "child": [
+                            {
+                                "id": 22,
+                                "name": "Md rocky",
+                                "positionId": 3,
+                                "positionName": "Software eng",
+                                "child": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": 21,
+                "name": "Md Sakib",
+                "positionId": 2,
+                "positionName": "Senior software eng",
+                "child": [
+                    {
+                        "id": 22,
+                        "name": "Md rocky",
+                        "positionId": 3,
+                        "positionName": "Software eng",
+                        "child": []
+                    }
+                ]
+            },
+            {
+                "id": 22,
+                "name": "Md rocky",
+                "positionId": 3,
+                "positionName": "Software eng",
+                "child": []
+            }
+        ],
+        "message": "",
+        "pagination": null
+
+    }
 
 ## More inside of logging and monitoring
 
